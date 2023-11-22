@@ -6,22 +6,22 @@ use NullixAT\Ascon\Ascon;
 
 $cycles = [
   [
-    "nr" => 25,
+    "nr" => 10,
     "messageSize" => 32,
     "assocSize" => 128,
   ],
   [
-    "nr" => 25,
+    "nr" => 10,
     "messageSize" => 128,
     "assocSize" => 512,
   ],
   [
-    "nr" => 25,
+    "nr" => 10,
     "messageSize" => 128 * 8,
     "assocSize" => 512 * 4,
   ],
   [
-    "nr" => 25,
+    "nr" => 10,
     "messageSize" => 512 * 8,
     "assocSize" => 0,
   ],

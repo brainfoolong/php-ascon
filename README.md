@@ -1,5 +1,7 @@
 # PHP Implementation of Ascon
 
+[![Tests](https://github.com/brainfoolong/php-ascon/actions/workflows/tests.yml/badge.svg)](https://github.com/brainfoolong/php-ascon/actions/workflows/tests.yml)
+
 This is a PHP 8+ implementation of Ascon v1.2, an authenticated cipher and hash function.
 It allows to encrypt and decrypt any kind of message. At kind be somewhat seen as the successor to AES encryption.
 Heavily inspired by the python implementation of Ascon by https://github.com/meichlseder/pyascon
@@ -70,20 +72,20 @@ See `tests/performance.php` for some tests with various message data size.
 # no scientific tests, just executed on my local machine, results depend on your machine
 # a "cycle" is one encryption and one decryption 
 
-### 25 cycles with 64 byte message data and 256 byte associated data ###
-Total Time: 1.08 seconds
+### 10 cycles with 64 byte message data and 256 byte associated data ###
+Total Time: 0.43 seconds
 Memory Usage: 2MB
 
-### 25 cycles with 256 byte message data and 1024 byte associated data ###
-Total Time: 3.34 seconds
+### 10 cycles with 256 byte message data and 1024 byte associated data ###
+Total Time: 1.32 seconds
 Memory Usage: 2MB
 
-### 25 cycles with 2048 byte message data and 4096 byte associated data ###
-Total Time: 14.82 seconds
+### 10 cycles with 2048 byte message data and 4096 byte associated data ###
+Total Time: 5.92 seconds
 Memory Usage: 2MB
 
-### 25 cycles with 8192 byte message data and 0 byte associated data ###
-Total Time: 19.91 seconds
+### 10 cycles with 8192 byte message data and 0 byte associated data ###
+Total Time: 7.93 seconds
 Memory Usage: 4MB
 ```
 
