@@ -1,0 +1,28 @@
+name: PHP tests
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  tests:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup PHP 8.0
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.0
+
+    - name: Setup PHP latest
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: latest
+
+    - name: Run tests with PHP 8.0
+      run: php8.0 tests/test-all.php
+
+    - name: Run tests with PHP latest
+      run: php tests/test-all.php

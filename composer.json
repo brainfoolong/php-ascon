@@ -1,0 +1,40 @@
+{
+  "name": "brainfoolong/php-ascon",
+  "type": "library",
+  "description": "PHP Implementation of Ascon",
+  "keywords": [
+    "ascon",
+    "php",
+    "encryption",
+    "decryption",
+    "cipher",
+    "hash",
+    "mac"
+  ],
+  "homepage": "https://github.com/brainfoolong/php-ascon",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Roland Eigelsreiter",
+      "homepage": "https://github.com/brainfoolong/php-ascon",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Nullix\\Ascon\\": "src/"
+    }
+  },
+  "archive": {
+    "exclude": [
+      "/tests",
+      ".gitignore",
+      ".github"
+    ]
+  },
+  "version": "1.0.0",
+  "require": {
+    "php": ">=8.0.0",
+    "ext-json": "*"
+  }
+}
