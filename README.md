@@ -25,9 +25,12 @@ https://ascon.iaik.tugraz.at/
 
 ## About me
 
-I have made library for AES PHP/JS encryption already in the past. Bit juggling is somewhat cool, i a really nerdy way.
+I have made library for AES PHP/JS encryption already in the past. Bit juggling is somewhat cool, in a really nerdy way.
 I like the Ascon implementation and it at the time of writing, a PHP implementation was missing. So i made one. Would be
 cool if you leave a follow or spend some virtual coffee.
+s
+## Javascript/Typescript Implementation
+Chances are high that you probably need a Javascript/Typescript (For your frontend) implementation too. I've made one here -> https://github.com/brainfoolong/j-ascon
 
 ## Usage
 
