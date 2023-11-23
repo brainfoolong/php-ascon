@@ -515,7 +515,7 @@ class Ascon
             $ciphertext = array_merge(
                 $ciphertext,
                 array_slice(self::intArrayToByteArray($data[0]), 0, min(8, $lastLen)),
-                array_slice(self::intArrayToByteArray($data[0]), 0, max(0, $lastLen - 8))
+                array_slice(self::intArrayToByteArray($data[1]), 0, max(0, $lastLen - 8))
             );
         }
         self::debug('process plaintext', $data);
