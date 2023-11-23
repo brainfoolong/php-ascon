@@ -30,7 +30,7 @@ I like the Ascon implementation and it at the time of writing, a PHP implementat
 cool if you leave a follow or spend some virtual coffee.
 s
 ## Javascript/Typescript Implementation
-Chances are high that you probably need a Javascript/Typescript (For your frontend) implementation too. I've made one here -> https://github.com/brainfoolong/j-ascon
+Chances are high that you probably need a Javascript/Typescript (For your frontend) implementation too. I've made one here -> https://github.com/brainfoolong/js-ascon
 
 ## Usage
 
