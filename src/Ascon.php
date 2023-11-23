@@ -771,29 +771,6 @@ class Ascon
     }
 
     /**
-     * Set a specific bit in given integer
-     * @param int $int The integer to manipulate
-     * @param int $nr The bit nr to set
-     * @param int $value The value to set, 0 or 1
-     * @return int The new integer
-     */
-    public static function bitSet(int $int, int $nr, int $value): int
-    {
-        return ($int & ~(1 << $nr)) | ($value << $nr);
-    }
-
-    /**
-     * Get a specific bit value, 0 or 1
-     * @param int $int The integer to check
-     * @param int $nr The bit nr to set
-     * @return int The value of the bit, 0 or 1
-     */
-    public static function bitGet(int $int, int $nr): int
-    {
-        return ($int >> $nr) & 1;
-    }
-
-    /**
      * Split 2 32bit integers into 8 bytes
      * @param int[] $intArray
      * @return int[]
