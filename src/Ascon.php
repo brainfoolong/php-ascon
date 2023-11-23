@@ -76,7 +76,7 @@ class Ascon
      * @param string $hexStr Encrypted output from self::encryptToHex()
      * @param mixed|null $associatedData Any type of associated ddata
      * @param string $cipherVariant See self::decrypt()
-     * @return mixed
+     * @return mixed Null indicate unsuccessfull decrypt
      */
     public static function decryptFromHex(
         string $secretKey,
@@ -104,7 +104,7 @@ class Ascon
      * @param string|array $plaintext A string or byte array of any length
      * @param string $variant "Ascon-128", "Ascon-128a", or "Ascon-80pq" (specifies key size, rate and number of
      *   rounds)
-     * @return array
+     * @return int[] Return encrypted ciphertext and tag as byte array
      */
     public static function encrypt(
         string|array $key,
@@ -112,7 +112,6 @@ class Ascon
         string|array $associatedData,
         string|array $plaintext,
         string $variant = "Ascon-128"
-
     ): array {
         $key = !is_array($key) ? self::strToByteArray($key) : $key;
         $keyLength = count($key);
@@ -207,12 +206,12 @@ class Ascon
         $message = !is_array($message) ? self::strToByteArray($message) : $message;
         $messageLength = count($message);
         if (in_array($variant, ["Ascon-Mac", "Ascon-Maca"])) {
-            self::assert(count($key) === 16 && $tagLength <= 16, 'Incorrect key length');
+            self::assert($keyLength === 16 && $tagLength <= 16, 'Incorrect key length');
         } elseif (in_array($variant, ["Ascon-Prf", "Ascon-Prfa"])) {
-            self::assert(count($key) === 16, 'Incorrect key length');
+            self::assert($keyLength === 16, 'Incorrect key length');
         } elseif ($variant == "Ascon-PrfShort") {
-            self::assert(count($message) <= 16, 'Message to long for variant ' . $variant);
-            self::assert(count($key) === 16 && $tagLength <= 16 && count($message) <= 16, 'Incorrect key length');
+            self::assert($messageLength <= 16, 'Message to long for variant ' . $variant);
+            self::assert($keyLength === 16 && $tagLength <= 16 && $messageLength <= 16, 'Incorrect key length');
         }
         $permutationRoundsA = 12;
         $permutationRoundsB = in_array($variant, ["Ascon-Prfa", "Ascon-Maca"]) ? 8 : 12;
@@ -537,9 +536,8 @@ class Ascon
         array $ciphertext
     ): array {
         $lastLen = count($ciphertext) % $rate;
-        $messagePadded = $ciphertext;
         $messagePadded = array_merge(
-            $messagePadded,
+            $ciphertext,
             array_fill(0, $rate - $lastLen, 0x0)
         );
         $messagePaddedLength = count($messagePadded);
