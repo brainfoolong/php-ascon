@@ -44,7 +44,7 @@ $decrypted = Ascon::decryptFromHex($key, $encrypted, $associatedData);
 
 // raw usage (the original implementation with raw values)
 $key = [0x90, 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0xAA, 0x90, 0x90, 0x90, 0x90, 0xCC, 0xEF];
-$nonce = [0x50, 0x10, 0x30, 0x70, 0x90, 0x60, 0x40, 0x30, 0xEF, 0x20, 0x10, 0xAA, 0x90, 0x90, 0x90, 0xCC];
+$nonce = random_bytes(16);
 $plaintext = "Hi, i am a secret message!";
 $associatedData = "Some data the will not be encrypted but verified along the plaintext (Decryption will fail if you not provide the exact same data)";
 $ciphertextByteArray = Ascon::encrypt($key, $nonce, $associatedData, $plaintext);
