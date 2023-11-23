@@ -42,6 +42,7 @@ $associatedData = "Some data 😋 文 This data is not contained in the encrypt 
 $encrypted = Ascon::encryptToHex($key, $message, $associatedData);
 $decrypted = Ascon::decryptFromHex($key, $encrypted, $associatedData);
 
+// raw usage of basic methods
 // key must be 16 bytes or 20 bytes, depending on variant
 $key = [0x90, 0x80, 0x70, 0x60, 0x50, 0x40, 0x30, 0x20, 0x10, 0xAA, 0x90, 0x90, 0x90, 0x90, 0xCC, 0xEF];
 // nonce must be 16 bytes and should always be random bytes, you must use same nonce for encrypt and decrypt the same message
@@ -55,6 +56,9 @@ $plaintext = "Hi, i am a secret message!";
 $associatedData = "Some data to pass to encryption and decryption - This data is not contained in the ciphertext output.";
 $ciphertextByteArray = Ascon::encrypt($key, $nonce, $associatedData, $plaintext);
 $plaintextDecrypted = Ascon::decrypt($key, $nonce, $associatedData, $ciphertextByteArray);
+
+var_dump(Ascon::hash('Testmessage'));
+var_dump(Ascon::mac($key, 'Testmessage'));
 ```
 
 ## Performance and PHP limitations (No showstopper, but you should take notice)

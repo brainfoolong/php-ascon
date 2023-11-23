@@ -29,3 +29,7 @@ var_export([
   'plaintextDecrypted' => Ascon::byteArrayToStr($plaintextDecrypted),
   'verifiedDecryption' => Ascon::strToByteArray($plaintext) === $plaintextDecrypted,
 ]);
+
+
+var_dump(Ascon::hash('Testmessage'));
+var_dump(Ascon::mac($key, 'Testmessage'));
