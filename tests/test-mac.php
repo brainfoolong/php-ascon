@@ -2,7 +2,7 @@
 
 require_once __DIR__ . "/../src/Ascon.php";
 
-use NullixAT\Ascon\Ascon;
+use Nullix\Ascon\Ascon;
 
 Ascon::$debug = false;
 Ascon::$debugPermutation = false;

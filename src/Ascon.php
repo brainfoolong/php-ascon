@@ -1,6 +1,6 @@
 <?php
 
-namespace NullixAT\Ascon;
+namespace Nullix\Ascon;
 
 use Exception;
 

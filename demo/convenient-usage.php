@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . "/../src/Ascon.php";
 
-use NullixAT\Ascon\Ascon;
+use Nullix\Ascon\Ascon;
 
 // convenient usage of the ascon cipher for real world usage
 // it automatically manages all the key conversion to correct key sizes

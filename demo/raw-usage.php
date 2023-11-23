@@ -2,7 +2,7 @@
 
 require __DIR__ . "/../src/Ascon.php";
 
-use NullixAT\Ascon\Ascon;
+use Nullix\Ascon\Ascon;
 
 // this show the usage of the original raw ascon encrypt/decrypt values
 // you have to provide correct parameters and byte arrays to make this work

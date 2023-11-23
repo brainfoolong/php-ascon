@@ -34,7 +34,7 @@ cool if you leave a follow or spend some virtual coffee.
 For more demos see in folder `demo`.
 
 ```php
-use NullixAT\Ascon\Ascon;
+use Nullix\Ascon\Ascon;
 // convenient usage (generating random nonce and hashing keys for you)
 $key = "mypassword";
 $message = ["this can be any data type 😎 文 or encoding", 123];
