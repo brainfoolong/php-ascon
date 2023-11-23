@@ -53,19 +53,19 @@ class Ascon
      * @return string
      */
     public static function encryptToHex(
-      string $secretKey,
-      mixed $messageToEncrypt,
-      mixed $associatedData = null,
-      string $cipherVariant = "Ascon-128"
+        string $secretKey,
+        mixed $messageToEncrypt,
+        mixed $associatedData = null,
+        string $cipherVariant = "Ascon-128"
     ): string {
         $key = self::hash($secretKey, "Ascon-Xof", $cipherVariant === 'Ascon-80pq' ? 20 : 16);
         $nonce = random_bytes(16);
         $ciphertext = self::encrypt(
-          $key,
-          $nonce,
-          $associatedData !== null ? json_encode($associatedData, JSON_THROW_ON_ERROR) : "",
-          json_encode($messageToEncrypt, JSON_THROW_ON_ERROR),
-          $cipherVariant
+            $key,
+            $nonce,
+            $associatedData !== null ? json_encode($associatedData, JSON_THROW_ON_ERROR) : "",
+            json_encode($messageToEncrypt, JSON_THROW_ON_ERROR),
+            $cipherVariant
         );
         return bin2hex(self::byteArrayToStr($ciphertext)) . bin2hex($nonce);
     }
@@ -79,18 +79,18 @@ class Ascon
      * @return mixed
      */
     public static function decryptFromHex(
-      string $secretKey,
-      string $hexStr,
-      mixed $associatedData = null,
-      string $cipherVariant = "Ascon-128"
+        string $secretKey,
+        string $hexStr,
+        mixed $associatedData = null,
+        string $cipherVariant = "Ascon-128"
     ): mixed {
         $key = self::hash($secretKey, "Ascon-Xof", $cipherVariant === 'Ascon-80pq' ? 20 : 16);
         $plaintextMessage = self::decrypt(
-          $key,
-          hex2bin(substr($hexStr, -32)),
-          $associatedData !== null ? json_encode($associatedData, JSON_THROW_ON_ERROR) : "",
-          hex2bin(substr($hexStr, 0, -32)),
-          $cipherVariant
+            $key,
+            hex2bin(substr($hexStr, -32)),
+            $associatedData !== null ? json_encode($associatedData, JSON_THROW_ON_ERROR) : "",
+            hex2bin(substr($hexStr, 0, -32)),
+            $cipherVariant
         );
         return $plaintextMessage !== null ? json_decode(self::byteArrayToStr($plaintextMessage), true) : null;
     }
@@ -107,11 +107,11 @@ class Ascon
      * @return array
      */
     public static function encrypt(
-      string|array $key,
-      string|array $nonce,
-      string|array $associatedData,
-      string|array $plaintext,
-      string $variant = "Ascon-128"
+        string|array $key,
+        string|array $nonce,
+        string|array $associatedData,
+        string|array $plaintext,
+        string $variant = "Ascon-128"
 
     ): array {
         $key = !is_array($key) ? self::strToByteArray($key) : $key;
@@ -148,11 +148,11 @@ class Ascon
      * @return int[]|null Returns plaintext as byte array or NULL when cannot decrypt
      */
     public static function decrypt(
-      string|array $key,
-      string|array $nonce,
-      string|array $associatedData,
-      string|array $ciphertextAndTag,
-      string $variant = "Ascon-128"
+        string|array $key,
+        string|array $nonce,
+        string|array $associatedData,
+        string|array $ciphertextAndTag,
+        string $variant = "Ascon-128"
     ): ?array {
         $key = !is_array($key) ? self::strToByteArray($key) : $key;
         $keyLength = count($key);
@@ -195,13 +195,13 @@ class Ascon
      * @return array The byte array representing the authentication tag
      */
     public static function mac(
-      string|array $key,
-      string|array $message,
-      string $variant = "Ascon-Mac",
-      int $tagLength = 16
+        string|array $key,
+        string|array $message,
+        string $variant = "Ascon-Mac",
+        int $tagLength = 16
     ): array {
         self::assertInArray($variant, ["Ascon-Mac", "Ascon-Prf", "Ascon-Maca", "Ascon-Prfa", "Ascon-PrfShort"],
-          "Mac variant");
+            "Mac variant");
         $key = !is_array($key) ? self::strToByteArray($key) : $key;
         $keyLength = count($key);
         $message = !is_array($message) ? self::strToByteArray($message) : $message;
@@ -220,10 +220,10 @@ class Ascon
         $rate = 16;
         if ($variant === 'Ascon-PrfShort') {
             $tmp = array_merge(
-              [$keyLength * 8, $messageLength * 8, $permutationRoundsA + 64, $tagLength * 8, 0, 0, 0, 0],
-              $key,
-              $message,
-              array_fill(0, 16 - $messageLength, 0)
+                [$keyLength * 8, $messageLength * 8, $permutationRoundsA + 64, $tagLength * 8, 0, 0, 0, 0],
+                $key,
+                $message,
+                array_fill(0, 16 - $messageLength, 0)
             );
             $data = self::byteArrayToStateArray($tmp);
             self::debug("initial value", $data);
@@ -231,26 +231,26 @@ class Ascon
             self::debug("process message", $data);
             // finalization (squeezing)
             return array_merge(
-              self::intArrayToByteArray(
-                self::bitOperation($data[3], self::byteArrayToIntArray($key, 0), "^")
-              ),
+                self::intArrayToByteArray(
+                    self::bitOperation($data[3], self::byteArrayToIntArray($key, 0), "^")
+                ),
 
-              self::intArrayToByteArray(
-                self::bitOperation($data[4], self::byteArrayToIntArray($key, 8), "^")
-              )
+                self::intArrayToByteArray(
+                    self::bitOperation($data[4], self::byteArrayToIntArray($key, 8), "^")
+                )
             );
         }
         $tagSpec = self::strToByteArray(pack("N", in_array($variant, ["Ascon-Mac", "Ascon-Maca"]) ? 128 : 0));
         $tmp = array_merge(
-          [
-            $keyLength * 8,
-            $rate * 8,
-            $permutationRoundsA + 128,
-            $permutationRoundsA - $permutationRoundsB,
-          ],
-          $tagSpec,
-          $key,
-          array_fill(0, 16, 0)
+            [
+                $keyLength * 8,
+                $rate * 8,
+                $permutationRoundsA + 128,
+                $permutationRoundsA - $permutationRoundsB,
+            ],
+            $tagSpec,
+            $key,
+            array_fill(0, 16, 0)
         );
         $data = self::byteArrayToStateArray($tmp);
         self::debug("initial value", $data);
@@ -260,16 +260,16 @@ class Ascon
         $messagePadded = $message;
         $messagePadded[] = 0x80;
         $messagePadded = array_merge($messagePadded,
-          array_fill(0, $messageBlockSize - ($messageLength % $messageBlockSize) - 1, 0x0));
+            array_fill(0, $messageBlockSize - ($messageLength % $messageBlockSize) - 1, 0x0));
         $messagePaddedLength = count($messagePadded);
         $iterations = in_array($variant, ["Ascon-Prfa", "Ascon-Maca"]) ? 4 : 3;
         // first s-1 blocks
         for ($block = 0; $block < $messagePaddedLength - $messageBlockSize; $block += $messageBlockSize) {
             for ($i = 0; $i <= $iterations; $i++) {
                 $data[$i] = self::bitOperation(
-                  $data[$i],
-                  self::byteArrayToIntArray($messagePadded, $block + ($i * 8)),
-                  "^"
+                    $data[$i],
+                    self::byteArrayToIntArray($messagePadded, $block + ($i * 8)),
+                    "^"
                 );
             }
             self::permutation($data, $permutationRoundsB);
@@ -278,15 +278,15 @@ class Ascon
         $block = $messagePaddedLength - $messageBlockSize;
         for ($i = 0; $i <= $iterations; $i++) {
             $data[$i] = self::bitOperation(
-              $data[$i],
-              self::byteArrayToIntArray($messagePadded, $block + ($i * 8)),
-              "^"
+                $data[$i],
+                self::byteArrayToIntArray($messagePadded, $block + ($i * 8)),
+                "^"
             );
         }
         $data[4] = self::bitOperation(
-          $data[4],
-          [0, 1],
-          "^"
+            $data[4],
+            [0, 1],
+            "^"
         );
         self::debug("process message", $data);
         // finalization (squeezing)
@@ -323,9 +323,9 @@ class Ascon
 
         $tagSpec = self::strToByteArray(pack("N", in_array($variant, ["Ascon-Hash", "Ascon-Hasha"]) ? 256 : 0));
         $tmp = array_merge(
-          [0, $rate * 8, $permutationRoundsA, $permutationRoundsA - $permutationRoundsB],
-          $tagSpec,
-          array_fill(0, 32, 0)
+            [0, $rate * 8, $permutationRoundsA, $permutationRoundsA - $permutationRoundsB],
+            $tagSpec,
+            array_fill(0, 32, 0)
         );
         $data = self::byteArrayToStateArray($tmp);
         self::debug('initial value', $data, true);
@@ -339,18 +339,18 @@ class Ascon
         // first s-1 blocks
         for ($block = 0; $block < $messagePaddedLength - $rate; $block += $rate) {
             $data[0] = self::bitOperation(
-              $data[0],
-              self::byteArrayToIntArray($messagePadded, $block),
-              "^"
+                $data[0],
+                self::byteArrayToIntArray($messagePadded, $block),
+                "^"
             );
             self::permutation($data, $permutationRoundsB);
         }
         // last block
         $block = $messagePaddedLength - $rate;
         $data[0] = self::bitOperation(
-          $data[0],
-          self::byteArrayToIntArray($messagePadded, $block),
-          "^"
+            $data[0],
+            self::byteArrayToIntArray($messagePadded, $block),
+            "^"
         );
         self::debug("process message", $data);
         // finalization (squeezing)
@@ -376,25 +376,25 @@ class Ascon
      * @param array $nonce A bytes object of size 16
      */
     public static function initialize(
-      array &$data,
-      int $keySize,
-      int $rate,
-      int $permutationRoundsA,
-      int $permutationRoundsB,
-      array $key,
-      array $nonce
+        array &$data,
+        int $keySize,
+        int $rate,
+        int $permutationRoundsA,
+        int $permutationRoundsB,
+        array $key,
+        array $nonce
     ): void {
         $data = self::byteArrayToStateArray(array_merge(
-          [$keySize, $rate * 8, $permutationRoundsA, $permutationRoundsB],
-          array_fill(0, 20 - count($key), 0),
-          $key,
-          $nonce
+            [$keySize, $rate * 8, $permutationRoundsA, $permutationRoundsB],
+            array_fill(0, 20 - count($key), 0),
+            $key,
+            $nonce
         ));
         self::debug('initial value', $data);
         self::permutation($data, $permutationRoundsA);
         $zeroKey = self::byteArrayToStateArray(array_merge(
-          array_fill(0, 40 - count($key), 0),
-          $key
+            array_fill(0, 40 - count($key), 0),
+            $key
         ));
         for ($i = 0; $i <= 4; $i++) {
             $data[$i] = self::bitOperation($data[$i], $zeroKey[$i], "^");
@@ -411,39 +411,39 @@ class Ascon
      * @return void
      */
     public static function processAssociatedData(
-      array &$data,
-      int $permutationRoundsB,
-      int $rate,
-      array $associatedData
+        array &$data,
+        int $permutationRoundsB,
+        int $rate,
+        array $associatedData
     ): void {
         if ($associatedData) {
             $messagePadded = $associatedData;
             $messagePadded[] = 0x80;
             $messagePadded = array_merge(
-              $messagePadded,
-              array_fill(0, $rate - (count($associatedData) % $rate) - 1, 0x0)
+                $messagePadded,
+                array_fill(0, $rate - (count($associatedData) % $rate) - 1, 0x0)
             );
             $messagePaddedLength = count($messagePadded);
             for ($block = 0; $block < $messagePaddedLength; $block += $rate) {
                 $data[0] = self::bitOperation(
-                  $data[0],
-                  self::byteArrayToIntArray($messagePadded, $block),
-                  "^"
+                    $data[0],
+                    self::byteArrayToIntArray($messagePadded, $block),
+                    "^"
                 );
                 if ($rate === 16) {
                     $data[1] = self::bitOperation(
-                      $data[1],
-                      self::byteArrayToIntArray($messagePadded, $block + 8),
-                      "^"
+                        $data[1],
+                        self::byteArrayToIntArray($messagePadded, $block + 8),
+                        "^"
                     );
                 }
                 self::permutation($data, $permutationRoundsB);
             }
         }
         $data[4] = self::bitOperation(
-          $data[4],
-          [0, 1],
-          "^"
+            $data[4],
+            [0, 1],
+            "^"
         );
         self::debug('process associated data', $data);
     }
@@ -457,33 +457,33 @@ class Ascon
      * @return int[] Returns the ciphertext as byte array
      */
     public static function processPlaintext(
-      array &$data,
-      int $permutationRoundsB,
-      int $rate,
-      array $plaintext
+        array &$data,
+        int $permutationRoundsB,
+        int $rate,
+        array $plaintext
     ): array {
         $lastLen = count($plaintext) % $rate;
         $messagePadded = $plaintext;
         $messagePadded[] = 0x80;
         $messagePadded = array_merge(
-          $messagePadded,
-          array_fill(0, $rate - $lastLen - 1, 0x0)
+            $messagePadded,
+            array_fill(0, $rate - $lastLen - 1, 0x0)
         );
         $messagePaddedLength = count($messagePadded);
         $ciphertext = [];
         // first t-1 blocks
         for ($block = 0; $block < $messagePaddedLength - $rate; $block += $rate) {
             $data[0] = self::bitOperation(
-              $data[0],
-              self::byteArrayToIntArray($messagePadded, $block),
-              "^"
+                $data[0],
+                self::byteArrayToIntArray($messagePadded, $block),
+                "^"
             );
             $ciphertext = array_merge($ciphertext, self::intArrayToByteArray($data[0]));
             if ($rate === 16) {
                 $data[1] = self::bitOperation(
-                  $data[1],
-                  self::byteArrayToIntArray($messagePadded, $block + 8),
-                  "^"
+                    $data[1],
+                    self::byteArrayToIntArray($messagePadded, $block + 8),
+                    "^"
                 );
                 $ciphertext = array_merge($ciphertext, self::intArrayToByteArray($data[1]));
             }
@@ -493,29 +493,29 @@ class Ascon
         $block = $messagePaddedLength - $rate;
         if ($rate === 8) {
             $data[0] = self::bitOperation(
-              $data[0],
-              self::byteArrayToIntArray($messagePadded, $block),
-              "^"
+                $data[0],
+                self::byteArrayToIntArray($messagePadded, $block),
+                "^"
             );
             $ciphertext = array_merge(
-              $ciphertext,
-              array_slice(self::intArrayToByteArray($data[0]), 0, $lastLen),
+                $ciphertext,
+                array_slice(self::intArrayToByteArray($data[0]), 0, $lastLen),
             );
         } elseif ($rate === 16) {
             $data[0] = self::bitOperation(
-              $data[0],
-              self::byteArrayToIntArray($messagePadded, $block),
-              "^"
+                $data[0],
+                self::byteArrayToIntArray($messagePadded, $block),
+                "^"
             );
             $data[1] = self::bitOperation(
-              $data[1],
-              self::byteArrayToIntArray($messagePadded, $block + 8),
-              "^"
+                $data[1],
+                self::byteArrayToIntArray($messagePadded, $block + 8),
+                "^"
             );
             $ciphertext = array_merge(
-              $ciphertext,
-              array_slice(self::intArrayToByteArray($data[0]), 0, min(8, $lastLen)),
-              array_slice(self::intArrayToByteArray($data[0]), 0, max(0, $lastLen - 8))
+                $ciphertext,
+                array_slice(self::intArrayToByteArray($data[0]), 0, min(8, $lastLen)),
+                array_slice(self::intArrayToByteArray($data[0]), 0, max(0, $lastLen - 8))
             );
         }
         self::debug('process plaintext', $data);
@@ -531,16 +531,16 @@ class Ascon
      * @return int[] Returns the ciphertext as byte array
      */
     public static function processCiphertext(
-      array &$data,
-      int $permutationRoundsB,
-      int $rate,
-      array $ciphertext
+        array &$data,
+        int $permutationRoundsB,
+        int $rate,
+        array $ciphertext
     ): array {
         $lastLen = count($ciphertext) % $rate;
         $messagePadded = $ciphertext;
         $messagePadded = array_merge(
-          $messagePadded,
-          array_fill(0, $rate - $lastLen, 0x0)
+            $messagePadded,
+            array_fill(0, $rate - $lastLen, 0x0)
         );
         $messagePaddedLength = count($messagePadded);
         $plaintext = [];
@@ -548,15 +548,15 @@ class Ascon
         for ($block = 0; $block < $messagePaddedLength - $rate; $block += $rate) {
             $ci = self::byteArrayToIntArray($messagePadded, $block);
             $plaintext = array_merge(
-              $plaintext,
-              self::intArrayToByteArray(self::bitOperation($data[0], $ci, "^"))
+                $plaintext,
+                self::intArrayToByteArray(self::bitOperation($data[0], $ci, "^"))
             );
             $data[0] = $ci;
             if ($rate === 16) {
                 $ci = self::byteArrayToIntArray($messagePadded, $block + 8);
                 $plaintext = array_merge(
-                  $plaintext,
-                  self::intArrayToByteArray(self::bitOperation($data[1], $ci, "^"))
+                    $plaintext,
+                    self::intArrayToByteArray(self::bitOperation($data[1], $ci, "^"))
                 );
                 $data[1] = $ci;
             }
@@ -567,8 +567,8 @@ class Ascon
         if ($rate === 8) {
             $ci = self::byteArrayToIntArray($messagePadded, $block);
             $plaintext = array_merge(
-              $plaintext,
-              array_slice(self::intArrayToByteArray(self::bitOperation($ci, $data[0], "^")), 0, $lastLen)
+                $plaintext,
+                array_slice(self::intArrayToByteArray(self::bitOperation($ci, $data[0], "^")), 0, $lastLen)
             );
             $shift = $lastLen * 8;
             $mask = [0xffffffff >> $shift, 0xffffffff >> max(0, $shift - 32)];
@@ -585,12 +585,12 @@ class Ascon
             $ciA = self::byteArrayToIntArray($messagePadded, $block);
             $ciB = self::byteArrayToIntArray($messagePadded, $block + 8);
             $plaintextAdd = array_slice(array_merge(
-              self::intArrayToByteArray(self::bitOperation($data[0], $ciA, "^")),
-              self::intArrayToByteArray(self::bitOperation($data[1], $ciB, "^"))
+                self::intArrayToByteArray(self::bitOperation($data[0], $ciA, "^")),
+                self::intArrayToByteArray(self::bitOperation($data[1], $ciB, "^"))
             ), 0, $lastLen);
             $plaintext = array_merge(
-              $plaintext,
-              $plaintextAdd
+                $plaintext,
+                $plaintextAdd
             );
             if ($lastLen < 8) {
                 $masked = self::bitOperation($data[0], $mask, "&");
@@ -615,10 +615,10 @@ class Ascon
      * @return int[] The tag as a byte array
      */
     public static function finalize(
-      array &$data,
-      int $permutationRoundsA,
-      int $rate,
-      array $key
+        array &$data,
+        int $permutationRoundsA,
+        int $rate,
+        array $key
     ): array {
         $index = floor($rate / 8);
         $data[$index] = self::bitOperation($data[$index], self::byteArrayToIntArray($key, 0), "^");
@@ -631,8 +631,8 @@ class Ascon
         $data[4] = self::bitOperation($data[4], self::byteArrayToIntArray($key, -8), "^");
         self::debug('finalization', $data);
         return array_merge(
-          self::intArrayToByteArray($data[3]),
-          self::intArrayToByteArray($data[4])
+            self::intArrayToByteArray($data[3]),
+            self::intArrayToByteArray($data[4])
         );
     }
 
@@ -648,9 +648,9 @@ class Ascon
         for ($round = 12 - $rounds; $round < 12; $round++) {
             // add round constants
             $data[2] = self::bitOperation(
-              $data[2],
-              [0, 0xf0 - $round * 0x10 + $round * 0x1],
-              "^"
+                $data[2],
+                [0, 0xf0 - $round * 0x10 + $round * 0x1],
+                "^"
             );
             self::debug('round constant addition', $data, true);
             // substitution layer
@@ -660,17 +660,17 @@ class Ascon
             $t = [];
             for ($i = 0; $i <= 4; $i++) {
                 $t[$i] =
-                  self::bitOperation(
-                    self::bitOperation($data[$i], [0xffffffff, 0xffffffff], "^"),
-                    $data[($i + 1) % 5],
-                    "&"
-                  );
+                    self::bitOperation(
+                        self::bitOperation($data[$i], [0xffffffff, 0xffffffff], "^"),
+                        $data[($i + 1) % 5],
+                        "&"
+                    );
             }
             for ($i = 0; $i <= 4; $i++) {
                 $data[$i] = self::bitOperation(
-                  $data[$i],
-                  $t[($i + 1) % 5],
-                  "^"
+                    $data[$i],
+                    $t[($i + 1) % 5],
+                    "^"
                 );
             }
             $data[1] = self::bitOperation($data[1], $data[0], "^");
@@ -680,29 +680,29 @@ class Ascon
             self::debug('substitution layer', $data, true);
             // linear diffusion layer
             $data[0] = self::bitOperation(
-              $data[0],
-              self::bitOperation(self::bitRotateRight($data[0], 19), self::bitRotateRight($data[0], 28), "^"),
-              "^"
+                $data[0],
+                self::bitOperation(self::bitRotateRight($data[0], 19), self::bitRotateRight($data[0], 28), "^"),
+                "^"
             );
             $data[1] = self::bitOperation(
-              $data[1],
-              self::bitOperation(self::bitRotateRight($data[1], 61), self::bitRotateRight($data[1], 39), "^"),
-              "^"
+                $data[1],
+                self::bitOperation(self::bitRotateRight($data[1], 61), self::bitRotateRight($data[1], 39), "^"),
+                "^"
             );
             $data[2] = self::bitOperation(
-              $data[2],
-              self::bitOperation(self::bitRotateRight($data[2], 1), self::bitRotateRight($data[2], 6), "^"),
-              "^"
+                $data[2],
+                self::bitOperation(self::bitRotateRight($data[2], 1), self::bitRotateRight($data[2], 6), "^"),
+                "^"
             );
             $data[3] = self::bitOperation(
-              $data[3],
-              self::bitOperation(self::bitRotateRight($data[3], 10), self::bitRotateRight($data[3], 17), "^"),
-              "^"
+                $data[3],
+                self::bitOperation(self::bitRotateRight($data[3], 10), self::bitRotateRight($data[3], 17), "^"),
+                "^"
             );
             $data[4] = self::bitOperation(
-              $data[4],
-              self::bitOperation(self::bitRotateRight($data[4], 7), self::bitRotateRight($data[4], 41), "^"),
-              "^"
+                $data[4],
+                self::bitOperation(self::bitRotateRight($data[4], 7), self::bitRotateRight($data[4], 41), "^"),
+                "^"
             );
             self::debug('linear diffusion layer', $data, true);
         }
@@ -736,9 +736,9 @@ class Ascon
      * @return int[]
      */
     public static function bitOperation(
-      array $intArrayA,
-      array $intArrayB,
-      string $operator
+        array $intArrayA,
+        array $intArrayB,
+        string $operator
     ): array {
         return match ($operator) {
             "^" => [$intArrayA[0] ^ $intArrayB[0], $intArrayA[1] ^ $intArrayB[1]],
@@ -756,18 +756,18 @@ class Ascon
      */
     public static function bitRotateRight(array $intArr, int $places): array
     {
-        $arrNew = $intArr;
-        $place = 1;
-        while ($place <= $places) {
-            $bitARight = self::bitGet($arrNew[0], 0);
-            $bitBRight = self::bitGet($arrNew[1], 0);
-            $arrNew[0] = $arrNew[0] >> 1;
-            $arrNew[1] = $arrNew[1] >> 1;
-            $arrNew[0] = self::bitSet($arrNew[0], 31, $bitBRight);
-            $arrNew[1] = self::bitSet($arrNew[1], 31, $bitARight);
-            $place++;
+        // if more than 32 bit shift, swap integers because basically intA shift totally into intB
+        if ($places > 32) {
+            $nrA = $intArr[0];
+            $nrB = $intArr[1];
+            $intArr[1] = $nrA;
+            $intArr[0] = $nrB;
+            $places -= 32;
         }
-        return $arrNew;
+        return [
+            ($intArr[0] >> $places) | ((($intArr[1] & (1 << $places) - 1) << (32 - $places))),
+            ($intArr[1] >> $places) | ((($intArr[0] & (1 << $places) - 1) << (32 - $places)))
+        ];
     }
 
     /**
@@ -835,11 +835,11 @@ class Ascon
     public static function byteArrayToStateArray(array $byteArray): array
     {
         return [
-          self::byteArrayToIntArray($byteArray, 0),
-          self::byteArrayToIntArray($byteArray, 8),
-          self::byteArrayToIntArray($byteArray, 16),
-          self::byteArrayToIntArray($byteArray, 24),
-          self::byteArrayToIntArray($byteArray, 32),
+            self::byteArrayToIntArray($byteArray, 0),
+            self::byteArrayToIntArray($byteArray, 8),
+            self::byteArrayToIntArray($byteArray, 16),
+            self::byteArrayToIntArray($byteArray, 24),
+            self::byteArrayToIntArray($byteArray, 32),
         ];
     }
 
@@ -851,8 +851,8 @@ class Ascon
     public static function byteArrayToHex(array $byteArray): string
     {
         return "0x" . implode("", array_map(function ($byte) {
-              return str_pad(dechex($byte), 2, "0", STR_PAD_LEFT);
-          }, $byteArray));
+                return str_pad(dechex($byte), 2, "0", STR_PAD_LEFT);
+            }, $byteArray));
     }
 
     /**
@@ -863,8 +863,8 @@ class Ascon
     public static function intArrayToHex(array $intArr): string
     {
         return "0x" .
-          str_pad(dechex($intArr[0]), 8, "0", STR_PAD_LEFT) .
-          str_pad(dechex($intArr[1]), 8, "0", STR_PAD_LEFT);
+            str_pad(dechex($intArr[0]), 8, "0", STR_PAD_LEFT) .
+            str_pad(dechex($intArr[1]), 8, "0", STR_PAD_LEFT);
     }
 
     /**
@@ -873,13 +873,13 @@ class Ascon
      * @param mixed $value
      * @param array $values
      * @param string $errorMessage
-     * @throws \Exception
+     * @throws Exception
      */
     public static function assertInArray(mixed $value, array $values, string $errorMessage): void
     {
         self::assert(in_array($value, $values),
-          $errorMessage . ": Value '$value' is not in available choices of\n" . var_export($values,
-            true));
+            $errorMessage . ": Value '$value' is not in available choices of\n" . var_export($values,
+                true));
     }
 
     /**
@@ -888,12 +888,12 @@ class Ascon
      * @param mixed $expected
      * @param mixed $actual
      * @param string $errorMessage
-     * @throws \Exception
+     * @throws Exception
      */
     public static function assertSame(mixed $expected, mixed $actual, string $errorMessage): void
     {
         self::assert($expected === $actual, $errorMessage . ": Value is expected to be\n" . var_export($expected,
-            true) . "\nbut actual value is\n" . var_export($actual, true));
+                true) . "\nbut actual value is\n" . var_export($actual, true));
     }
 
     /**
@@ -901,7 +901,7 @@ class Ascon
      * If false, it throw and exception
      * @param bool $result
      * @param string $errorMessage
-     * @throws \Exception
+     * @throws Exception
      */
     public static function assert(bool $result, string $errorMessage): void
     {
@@ -917,9 +917,9 @@ class Ascon
      * @param bool $permutation Is a permutation debug
      */
     public static function debug(
-      mixed $msg,
-      ?array $stateData = null,
-      bool $permutation = false
+        mixed $msg,
+        ?array $stateData = null,
+        bool $permutation = false
     ): void {
         if (!$permutation && !self::$debug) {
             return;
@@ -930,8 +930,8 @@ class Ascon
         echo "[Ascon Debug] ";
         if ($stateData) {
             echo $msg . ": " . json_encode(
-                array_map([__CLASS__, 'intArrayToHex'], $stateData)
-              ) . "\n";
+                    array_map([__CLASS__, 'intArrayToHex'], $stateData)
+                ) . "\n";
             return;
         }
         if (is_array($msg)) {
