@@ -73,19 +73,19 @@ See `tests/performance.php` for some tests with various message data size.
 # a "cycle" is one encryption and one decryption 
 
 ### 10 cycles with 64 byte message data and 256 byte associated data ###
-Total Time: 0.43 seconds
+Total Time: 0.07 seconds
 Memory Usage: 2MB
 
 ### 10 cycles with 256 byte message data and 1024 byte associated data ###
-Total Time: 1.32 seconds
+Total Time: 0.21 seconds
 Memory Usage: 2MB
 
 ### 10 cycles with 2048 byte message data and 4096 byte associated data ###
-Total Time: 5.92 seconds
+Total Time: 0.92 seconds
 Memory Usage: 2MB
 
 ### 10 cycles with 8192 byte message data and 0 byte associated data ###
-Total Time: 7.93 seconds
+Total Time: 1.34 seconds
 Memory Usage: 4MB
 ```
 
