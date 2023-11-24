@@ -1,7 +1,7 @@
 {
   "name": "brainfoolong/php-ascon",
   "type": "library",
-  "description": "PHP Implementation of Ascon",
+  "description": "PHP 8+ Implementation of Ascon, a family of authenticated encryption (AEAD) and hashing algorithms designed to be lightweight.",
   "keywords": [
     "ascon",
     "php",
