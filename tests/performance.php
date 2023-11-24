@@ -50,5 +50,5 @@ foreach ($cycles as $cycle) {
 
     echo "### $runs cycles with " . strlen($message) . " byte message data and " . strlen($associatedData ?? '') . " byte associated data ###\n";
     echo "Total Time: " . round($totalTime, 2) . " seconds\n";
-    echo "Memory Usage: " . round($memoryMax / 1024 / 1024, 2) . "MB\n\n";
+    echo "Memory Usage: " . round($memoryMax / 1024 / 1024, 2) . "MB\n";
 }

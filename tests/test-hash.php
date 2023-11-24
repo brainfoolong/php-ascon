@@ -28,3 +28,5 @@ Ascon::assertSame($expected, $actual, 'Hash of word "'.$word.'" in variant "Asco
 $expected = "0xb03447d661a92286a403507c0bb647c6c10dad98a4366b60a0631cd5cb7ed930";
 $actual = Ascon::byteArrayToHex(Ascon::hash($word, "Ascon-Hasha"));
 Ascon::assertSame($expected, $actual, 'Hash of word "'.$word.'" in variant "Ascon-Hasha"');
+
+echo basename(__FILE__) . " successfully done\n";

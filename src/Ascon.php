@@ -572,12 +572,12 @@ class Ascon
             $mask = [0xffffffff >> $shift, 0xffffffff >> max(0, $shift - 32)];
             $masked = self::bitOperation($data[0], $mask, "&");
             $shift = ($rate - $lastLen - 1) * 8;
-            $padding = [$shift > 32 ? 0x80 << ($shift - 32) : 0, $shift <= 32 ? 0x80 << ($shift) : 0];
+            $padding = [$shift >= 32 ? 0x80 << ($shift - 32) : 0, $shift < 32 ? 0x80 << ($shift) : 0];
             $data[0] = self::bitOperation(self::bitOperation($ci, $masked, "^"), $padding, "^");
         } elseif ($rate === 16) {
             $lastLenWord = $lastLen % 8;
             $shift = (8 - $lastLenWord - 1) * 8;
-            $padding = [$shift > 32 ? 0x80 << ($shift - 32) : 0, $shift <= 32 ? 0x80 << ($shift) : 0];
+            $padding = [$shift >= 32 ? 0x80 << ($shift - 32) : 0, $shift < 32 ? 0x80 << ($shift) : 0];
             $shift = $lastLenWord * 8;
             $mask = [0xffffffff >> $shift, 0xffffffff >> max(0, $shift - 32)];
             $ciA = self::byteArrayToIntArray($messagePadded, $block);
@@ -618,7 +618,7 @@ class Ascon
         int $rate,
         array $key
     ): array {
-        $index = floor($rate / 8);
+        $index = ($rate / 8) | 0;
         $data[$index] = self::bitOperation($data[$index], self::byteArrayToIntArray($key, 0), "^");
         $index++;
         $data[$index] = self::bitOperation($data[$index], self::byteArrayToIntArray($key, 8), "^");
@@ -754,13 +754,9 @@ class Ascon
      */
     public static function bitRotateRight(array $intArr, int $places): array
     {
-        // if more than 32 bit shift, swap integers because basically intA shift totally into intB
+        // if more than 32 bit shift, swap in 2 rounds
         if ($places > 32) {
-            $nrA = $intArr[0];
-            $nrB = $intArr[1];
-            $intArr[1] = $nrA;
-            $intArr[0] = $nrB;
-            $places -= 32;
+            return self::bitRotateRight(self::bitRotateRight($intArr, 32), $places - 32);
         }
         return [
             ($intArr[0] >> $places) | ((($intArr[1] & (1 << $places) - 1) << (32 - $places))),

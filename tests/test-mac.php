@@ -38,3 +38,5 @@ $word = "ascon";
 $expected = "0xbc38d3219d01a84e0afecd930c40ac9d";
 $actual = Ascon::byteArrayToHex(Ascon::mac($key, $word, "Ascon-PrfShort"));
 Ascon::assertSame($expected, $actual, 'Mac of word "'.$word.'" in variant "Ascon-PrfShort"');
+
+echo basename(__FILE__) . " successfully done\n";
