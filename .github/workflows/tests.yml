@@ -20,7 +20,7 @@ jobs:
         php-version: latest
 
     - name: Run tests with PHP 8.0
-      run: php8.0 tests/test-all.php
+      run: php8.0 tests/tests.php
 
     - name: Run tests with PHP latest
-      run: php tests/test-all.php
+      run: php tests/tests.php
