@@ -8,7 +8,6 @@ use function array_fill;
 use function array_map;
 use function array_merge;
 use function array_slice;
-use function array_values;
 use function bin2hex;
 use function dechex;
 use function hex2bin;
@@ -756,7 +755,7 @@ class Ascon
      */
     public static function strToByteArray(string $str): array
     {
-        return array_values(unpack("C*", $str));
+        return unpack("C*", $str);
     }
 
     /**
@@ -798,13 +797,13 @@ class Ascon
     }
 
     /**
-     * Split 2 32bit integers into 8 bytes
+     * Split 2x 32bit integers into 8 bytes
      * @param int[] $intArray
      * @return int[]
      */
     public static function intArrayToByteArray(array $intArray): array
     {
-        return array_values(unpack("C*", pack("V", $intArray[1]) . pack("V", $intArray[0])));
+        return unpack("C*", pack("V", $intArray[1]) . pack("V", $intArray[0]));
     }
 
     /**
@@ -815,19 +814,19 @@ class Ascon
      */
     public static function byteArrayToIntArray(array $byteArr, int $offset): array
     {
-        $byteArr = array_reverse($byteArr);
         $len = count($byteArr);
-        // split 8 bytes into 2 32bit integers
         if ($offset < 0) {
             $offset = $len + $offset;
         }
         $arr = [0, 0];
         for ($i = 0; $i < 8; $i++) {
-            $shift = (8 - 1 - $i) * 8;
+            $index = 7 - $i;
+            $shift = $index * 8;
+            $byte = ($byteArr[($index + $offset)] ?? 0);
             if ($shift < 32) {
-                $arr[1] ^= ($byteArr[$len - (8 - $i + $offset)] ?? 0) << $shift;
+                $arr[1] ^= $byte << $shift;
             } else {
-                $arr[0] ^= ($byteArr[$len - (8 - $i + $offset)] ?? 0) << ($shift - 32);
+                $arr[0] ^= $byte << ($shift - 32);
             }
         }
         return $arr;

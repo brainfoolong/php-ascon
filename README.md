@@ -39,6 +39,9 @@ Chances are high that you probably need a Javascript/Typescript (For your fronte
     # via composer
     composer require brainfoolong/php-ascon
 
+## Performance
+As [PHP do not support unsigned integers](https://www.php.net/manual/en/language.types.integer.php), there is no chance to directly work with 64bit unsigned integers. This library use 2x 32bit integers for all bit operations, which have performance penalties (almost half as fast as the typescript implementation). Without requiring specials php extensions which can handle 64bit unsigned integers, there is no way to improve the performance for now.
+
 ## Usage
 
 For more demos see in folder `demo`.

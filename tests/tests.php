@@ -13,6 +13,8 @@ function genBytes($len): array
     return $arr;
 }
 
+$startTime = microtime(true);
+
 $argv = $_SERVER['argv'];
 $tests = isset($argv[1]) ? explode(',', strtolower($argv[1])) : [];
 $aead_variants = empty($tests) || in_array(
@@ -204,5 +206,4 @@ $encrypted = Ascon::encryptToHex($secret, $msg);
 $decrypted = Ascon::decryptFromHex($secret, $encrypted);
 Ascon::assertSame($msg, $decrypted, 'Encryption/Decryption failed');
 
-echo 'Tests successfully done' . PHP_EOL;
-?>
+echo 'Tests successfully done in ' . round((microtime(true) - $startTime) * 1000) . "ms" . PHP_EOL;
