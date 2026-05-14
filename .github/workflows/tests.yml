@@ -8,13 +8,10 @@ jobs:
         phpversion: [ "8.0", "8.1", "8.2", "8.3", "8.4", "8.5", "latest"]
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    container:
+      image: php:${{ matrix.phpversion }}-cli
     steps:
       - uses: actions/checkout@v6
-
-      - name: Setup PHP
-        uses: https://github.com/shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.phpversion }}
 
       - name: Run tests with PHP
         run: php tests/tests.php
