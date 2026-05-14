@@ -1,6 +1,6 @@
 # PHP Implementation of Ascon
 
-[![Tests](https://github.com/brainfoolong/php-ascon/actions/workflows/tests.yml/badge.svg)](https://github.com/brainfoolong/php-ascon/actions/workflows/tests.yml)
+[![Tests](https://codeberg.org/BrainFooLong/php-ascon/actions/workflows/tests.yml/badge.svg)](https://codeberg.org/BrainFooLong/php-ascon/actions?workflow=tests.yml)
 
 This is a PHP implementation of Ascon v1.3, an authenticated cipher and hash function.
 It allows to encrypt and decrypt any kind of message. Includes the authenticated encryption and hash function variants as specified in [NIST SP 800-232 (initial public draft)](https://csrc.nist.gov/pubs/sp/800/232/ipd).
